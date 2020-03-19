@@ -1,0 +1,3 @@
+{
+  "*.{ts,tsx,s?css}": ["npx eslint --ignore-pattern '*.scss' --fix"]
+}

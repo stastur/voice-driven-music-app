@@ -1,0 +1,25 @@
+{
+  "extends": ["plugin:prettier/recommended", "react-app"],
+  "plugins": ["prettier", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "prettier/prettier": "error",
+    "react/self-closing-comp": ["error"],
+    "import/newline-after-import": "error",
+    "import/no-default-export": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always-and-inside-groups"
+      }
+    ]
+  }
+}
