@@ -3,10 +3,10 @@
   "plugins": ["prettier", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "prettier/prettier": "error",
-    "react/self-closing-comp": ["error"],
-    "import/newline-after-import": "error",
-    "import/no-default-export": "error",
+    "prettier/prettier": "warn",
+    "react/self-closing-comp": ["warn"],
+    "import/newline-after-import": "warn",
+    "import/no-default-export": "warn",
     "import/order": [
       "error",
       {
