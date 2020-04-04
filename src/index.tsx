@@ -9,7 +9,7 @@ import { App } from './App'
 import './index.css'
 
 initDeezer({
-  appId: process.env.DEEZER_APP_ID as string,
+  appId: process.env.REACT_APP_DEEZER_APP_ID || '',
   channelUrl: window.location.href,
 })(() => {
   ReactDOM.render(<App />, document.getElementById('root'))
