@@ -1,37 +1,40 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { Recognition } from './modules/recognition/recognition'
+import { Recognition } from './modules/recognition'
 import { initDeezer } from './modules/deezer'
 
 import { App } from './App'
 
 import './index.css'
 
+const appId = process.env.REACT_APP_DEEZER_APP_ID || ''
+const channelUrl = window.location.href + 'channel.html' //TODO: May cause some routing issues in future, but for now it's okay
+
 initDeezer({
-  appId: process.env.REACT_APP_DEEZER_APP_ID || '',
-  channelUrl: window.location.href,
-})(() => {
-  ReactDOM.render(<App />, document.getElementById('root'))
+  appId,
+  channelUrl,
+  onload: () => {
+    ReactDOM.render(<App />, document.getElementById('root'))
 
-  const recognition = new Recognition()
-    .setLanguage('ru-RU')
-    .addCommand({ trigger: 'играть', callback: DZ.player.play })
-    .addCommand({ trigger: 'пауза', callback: DZ.player.pause })
-    .addCommand({ trigger: 'следующий', callback: DZ.player.next })
-    .addCommand({ trigger: 'предыдущий', callback: DZ.player.prev })
-    .addCommand({
-      trigger: 'громче',
-      callback: () => DZ.player.setVolume(DZ.player.getVolume() + 10),
+    const recognition = new Recognition()
+      .addCommand({ trigger: 'play', callback: DZ.player.play })
+      .addCommand({ trigger: 'stop', callback: DZ.player.pause })
+      .addCommand({ trigger: 'next', callback: DZ.player.next })
+      .addCommand({ trigger: 'previous', callback: DZ.player.prev })
+      .addCommand({
+        trigger: 'volume up',
+        callback: () => DZ.player.setVolume(DZ.player.getVolume() + 20),
+      })
+      .addCommand({
+        trigger: 'volume down',
+        callback: () => DZ.player.setVolume(DZ.player.getVolume() - 20),
+      })
+
+    recognition.addEventListener('result', event => {
+      console.log(event)
     })
-    .addCommand({
-      trigger: 'тише',
-      callback: () => DZ.player.setVolume(DZ.player.getVolume() - 10),
-    })
 
-  recognition.addEventListener('result', event => {
-    console.log(event)
-  })
-
-  recognition.start()
+    recognition.start()
+  },
 })

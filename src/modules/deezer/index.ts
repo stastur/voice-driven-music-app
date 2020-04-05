@@ -1,12 +1,13 @@
 type InitOptions = {
   appId: string
   channelUrl: string
+  onload: () => void
 }
 
 const DEEZER_SDK_CDN_LINK = 'https://e-cdns-files.dzcdn.net/js/min/dz.js'
 const DEEZER_CONTAINER_ID = 'dz-root'
 
-export const initDeezer = ({ appId, channelUrl }: InitOptions) => {
+const initDeezer = ({ appId, channelUrl, onload }: InitOptions) => {
   const dzRoot = document.createElement('div')
 
   dzRoot.id = DEEZER_CONTAINER_ID
@@ -15,18 +16,20 @@ export const initDeezer = ({ appId, channelUrl }: InitOptions) => {
   const script = document.createElement('script')
 
   script.src = DEEZER_SDK_CDN_LINK
-  script.async = true
 
-  return (onPlayerLoad: () => void) => {
-    document.head.appendChild(script)
-    ;(window as any).dzAsyncInit = () => {
-      DZ.init({
-        appId,
-        channelUrl,
-        player: {
-          onload: onPlayerLoad,
-        },
-      })
-    }
+  document.head.appendChild(script)
+  ;(window as any).dzAsyncInit = () => {
+    DZ.init({
+      appId,
+      channelUrl,
+      player: {
+        onload,
+      },
+    })
   }
 }
+
+export { Player } from './Player'
+export { api } from './api'
+
+export { initDeezer }

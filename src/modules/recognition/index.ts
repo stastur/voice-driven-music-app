@@ -1,0 +1,1 @@
+export { Recognition } from './recognition'

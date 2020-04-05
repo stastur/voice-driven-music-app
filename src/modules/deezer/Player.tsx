@@ -16,12 +16,12 @@ import {
   FaVolumeUp,
 } from 'react-icons/fa'
 
-const Volume: React.FC<{ volume: number }> = ({ volume }) => (
+const Volume: React.FC<{ value: number }> = ({ value }) => (
   <Box d="flex" alignItems="center">
     <Box as={FaVolumeUp} paddingRight="1" />
 
     <Box d="flex" alignItems="center">
-      <Slider width="24" value={volume} onChange={DZ.player.setVolume}>
+      <Slider width="24" value={value} onChange={DZ.player.setVolume}>
         <SliderTrack />
         <SliderFilledTrack />
         <SliderThumb />
@@ -53,11 +53,8 @@ const Controls: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
   </Box>
 )
 
-const Song: React.FC<{ details: DeezerSdk.Track } & BoxProps> = ({
-  details,
-  ...boxProps
-}) => (
-  <Box {...boxProps}>
+const Song: React.FC<{ details: DeezerSdk.Track }> = ({ details }) => (
+  <Box px="2" flexGrow={1}>
     <Box fontWeight="bold" fontSize="md">
       {details?.title}
     </Box>
@@ -65,7 +62,22 @@ const Song: React.FC<{ details: DeezerSdk.Track } & BoxProps> = ({
   </Box>
 )
 
-export const Player = () => {
+const TrackProgress: React.FC<{ position: number; duration: number }> = ({
+  position,
+  duration,
+}) => {
+  const progressValue = duration ? (position / duration) * 100 : 0
+
+  return (
+    <Slider onChange={DZ.player.seek} value={progressValue}>
+      <SliderTrack />
+      <SliderFilledTrack />
+      <SliderThumb />
+    </Slider>
+  )
+}
+
+export const Player: React.FC<BoxProps> = props => {
   const {
     track,
     volume,
@@ -76,28 +88,17 @@ export const Player = () => {
 
   //TODO: remove in future
   useEffect(() => {
-    DZ.player.playAlbum(14048532)
+    DZ.player.playAlbum(7102365, false)
   }, [])
 
   return (
-    <Box>
-      <Box d="flex" flexGrow={1}>
-        <Slider
-          onChange={DZ.player.seek}
-          value={
-            isNaN((position / duration) * 100) ? 0 : (position / duration) * 100
-          }
-        >
-          <SliderTrack />
-          <SliderFilledTrack />
-          <SliderThumb />
-        </Slider>
-      </Box>
+    <Box {...props}>
+      <TrackProgress position={position} duration={duration} />
 
       <Box d="flex" alignItems="center">
         <Controls isPlaying={isPlaying} />
-        <Song flexGrow={1} px="3" details={track} />
-        <Volume volume={volume} />
+        <Song details={track} />
+        <Volume value={volume} />
       </Box>
     </Box>
   )
@@ -117,7 +118,7 @@ const useDeezerSubscriptions = () => {
     DZ.Event.subscribe('current_track', ({ track }) => setTrack(track))
     DZ.Event.subscribe('player_play', () => setIsPlaying(true))
     DZ.Event.subscribe('player_paused', () => setIsPlaying(false))
-    DZ.Event.subscribe('player_position', ([position, duration]: number[]) => {
+    DZ.Event.subscribe('player_position', ([position, duration]) => {
       setPosition(position)
       setDuration(duration)
     })
