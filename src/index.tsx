@@ -6,8 +6,6 @@ import { initDeezer } from './modules/deezer'
 
 import { App } from './App'
 
-import './index.css'
-
 const appId = process.env.REACT_APP_DEEZER_APP_ID || ''
 const channelUrl = window.location.href + 'channel.html' //TODO: May cause some routing issues in future, but for now it's okay
 

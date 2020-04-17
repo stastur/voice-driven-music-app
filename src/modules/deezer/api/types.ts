@@ -1,3 +1,14 @@
+type ApiError = {
+  code: number
+  message: string
+  type: string
+}
+
+export type ApiResponse<T> = {
+  error?: ApiError
+  body?: T
+}
+
 export type Artist = {
   /**
    * The artist's Deezer id
@@ -490,5 +501,7 @@ export type Genre = {
 }
 
 export type Search<T> = {
-  data: Array<T>
+  data: Array<T & { type: string }>
+  total: number
+  next?: string
 }
