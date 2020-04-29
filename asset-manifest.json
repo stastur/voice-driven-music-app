@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.js": "/voice-driven-music-app/static/js/main.0aa91871.chunk.js",
-    "main.js.map": "/voice-driven-music-app/static/js/main.0aa91871.chunk.js.map",
-    "runtime-main.js": "/voice-driven-music-app/static/js/runtime-main.20215be5.js",
-    "runtime-main.js.map": "/voice-driven-music-app/static/js/runtime-main.20215be5.js.map",
-    "static/js/2.f88c933a.chunk.js": "/voice-driven-music-app/static/js/2.f88c933a.chunk.js",
-    "static/js/2.f88c933a.chunk.js.map": "/voice-driven-music-app/static/js/2.f88c933a.chunk.js.map",
-    "index.html": "/voice-driven-music-app/index.html",
-    "precache-manifest.37497421c4c9a5ed76dd207f33105b9d.js": "/voice-driven-music-app/precache-manifest.37497421c4c9a5ed76dd207f33105b9d.js",
-    "service-worker.js": "/voice-driven-music-app/service-worker.js",
-    "static/js/2.f88c933a.chunk.js.LICENSE.txt": "/voice-driven-music-app/static/js/2.f88c933a.chunk.js.LICENSE.txt",
-    "static/media/black-logo.e1524107.svg": "/voice-driven-music-app/static/media/black-logo.e1524107.svg"
+    "main.js": "./static/js/main.acf6f0be.chunk.js",
+    "main.js.map": "./static/js/main.acf6f0be.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.81cefd07.js",
+    "runtime-main.js.map": "./static/js/runtime-main.81cefd07.js.map",
+    "static/js/2.f88c933a.chunk.js": "./static/js/2.f88c933a.chunk.js",
+    "static/js/2.f88c933a.chunk.js.map": "./static/js/2.f88c933a.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.3afdc5323ea1340c1e40c66d3a7b5784.js": "./precache-manifest.3afdc5323ea1340c1e40c66d3a7b5784.js",
+    "service-worker.js": "./service-worker.js",
+    "static/js/2.f88c933a.chunk.js.LICENSE.txt": "./static/js/2.f88c933a.chunk.js.LICENSE.txt",
+    "static/media/black-logo.e1524107.svg": "./static/media/black-logo.e1524107.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.20215be5.js",
+    "static/js/runtime-main.81cefd07.js",
     "static/js/2.f88c933a.chunk.js",
-    "static/js/main.0aa91871.chunk.js"
+    "static/js/main.acf6f0be.chunk.js"
   ]
 }
