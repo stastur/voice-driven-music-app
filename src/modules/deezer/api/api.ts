@@ -10,19 +10,15 @@ import {
   ApiResponse,
 } from './types'
 
-class ApiEntity {
-  protected _apiPath: string
+abstract class ApiEntity {
+  protected abstract _apiPath: string
 
-  constructor(apiPath: string) {
-    this._apiPath = apiPath
-  }
-
-  protected _callToAPI = <TResponse>(
+  protected _request = <T>(
     path: string,
     method?: DeezerSdk.HttpMethod,
     data?: any
   ) => {
-    return new Promise<ApiResponse<TResponse>>(resolve => {
+    return new Promise<ApiResponse<T>>(resolve => {
       const resolver = (res: any) => {
         const response = res.error ? { error: res.error } : { body: res }
         resolve(response)
@@ -44,78 +40,88 @@ class ApiEntity {
 }
 
 class TrackEntity extends ApiEntity {
+  protected _apiPath = 'track'
+
   fetchById = (id: number) => {
-    return this._callToAPI<Track>(this._buildUrl(id))
+    return this._request<Track>(this._buildUrl(id))
   }
 }
 
 class AlbumEntity extends ApiEntity {
+  protected _apiPath = 'album'
+
   fetchById = (id: number) => {
-    return this._callToAPI<Album>(this._buildUrl(id))
+    return this._request<Album>(this._buildUrl(id))
   }
 
   fetchTracks = (id: number) => {
-    return this._callToAPI<Pick<Album, 'tracks'>>(
-      this._buildUrl(`${id}/tracks`)
-    )
+    return this._request<Pick<Album, 'tracks'>>(this._buildUrl(`${id}/tracks`))
   }
 }
 
 class RadioEntity extends ApiEntity {
+  protected _apiPath = 'radio'
+
   fetchById = (id: number) => {
-    return this._callToAPI<Radio>(this._buildUrl(id))
+    return this._request<Radio>(this._buildUrl(id))
   }
 
   fetchStations = () => {
-    return this._callToAPI<Search<Radio>>(this._buildUrl())
+    return this._request<Search<Radio>>(this._buildUrl())
   }
 
   fetchTracks = (id: number) => {
-    return this._callToAPI<Search<Track>>(this._buildUrl(`${id}/tracks`))
+    return this._request<Search<Track>>(this._buildUrl(`${id}/tracks`))
   }
 }
 
 class GenreEntity extends ApiEntity {
+  protected _apiPath = 'genre'
+
   fetchById = (id: number) => {
-    return this._callToAPI<Radio>(this._buildUrl(id))
+    return this._request<Radio>(this._buildUrl(id))
   }
 
   fetchGenres = () => {
-    return this._callToAPI<Search<Genre>>(this._buildUrl())
+    return this._request<Search<Genre>>(this._buildUrl())
   }
 }
 
 class SearchEntity extends ApiEntity {
+  protected _apiPath = 'search'
+
   searchEverything = (query: string) => {
-    return this._callToAPI<Search<Track | Artist | Album>>(
+    return this._request<Search<Track | Artist | Album>>(
       this._buildUrl(`track?q=${query}`)
     )
   }
 
   searchTracks = (query: string) => {
-    return this._callToAPI<Search<Track>>(this._buildUrl(`track?q=${query}`))
+    return this._request<Search<Track>>(this._buildUrl(`track?q=${query}`))
   }
 }
 
 class ArtistEntity extends ApiEntity {
+  protected _apiPath = 'artist'
+
   fetchById = (id: number) => {
-    return this._callToAPI<Artist>(this._buildUrl(id))
+    return this._request<Artist>(this._buildUrl(id))
   }
 
   fetchAlbums = (id: number) => {
-    return this._callToAPI<Search<Album>>(this._buildUrl(`${id}/albums`))
+    return this._request<Search<Album>>(this._buildUrl(`${id}/albums`))
   }
 
   fetchRelatedArtists = (id: number) => {
-    return this._callToAPI<Search<Artist>>(this._buildUrl(`${id}/related`))
+    return this._request<Search<Artist>>(this._buildUrl(`${id}/related`))
   }
 }
 
 export const api = {
-  track: new TrackEntity('track'),
-  album: new AlbumEntity('album'),
-  radio: new RadioEntity('radio'),
-  genre: new GenreEntity('genre'),
-  search: new SearchEntity('search'),
-  artist: new ArtistEntity('artist'),
+  track: new TrackEntity(),
+  album: new AlbumEntity(),
+  radio: new RadioEntity(),
+  genre: new GenreEntity(),
+  search: new SearchEntity(),
+  artist: new ArtistEntity(),
 }

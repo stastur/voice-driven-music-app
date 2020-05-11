@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { ThemeProvider } from '@chakra-ui/core'
 
-import { Recognition } from './modules/recognition'
 import { initDeezer } from './modules/deezer'
 
 import { App } from './App'
@@ -13,26 +13,11 @@ initDeezer({
   appId,
   channelUrl,
   onload: () => {
-    ReactDOM.render(<App />, document.getElementById('root'))
-
-    const recognition = new Recognition()
-      .addCommand({ trigger: 'play', callback: DZ.player.play })
-      .addCommand({ trigger: 'stop', callback: DZ.player.pause })
-      .addCommand({ trigger: 'next', callback: DZ.player.next })
-      .addCommand({ trigger: 'previous', callback: DZ.player.prev })
-      .addCommand({
-        trigger: 'volume up',
-        callback: () => DZ.player.setVolume(DZ.player.getVolume() + 20),
-      })
-      .addCommand({
-        trigger: 'volume down',
-        callback: () => DZ.player.setVolume(DZ.player.getVolume() - 20),
-      })
-
-    recognition.addEventListener('result', event => {
-      console.log(event)
-    })
-
-    recognition.start()
+    ReactDOM.render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>,
+      document.getElementById('root')
+    )
   },
 })

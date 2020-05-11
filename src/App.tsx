@@ -1,32 +1,69 @@
-import React, { useEffect, useState } from 'react'
-import { ThemeProvider, Box, CSSReset } from '@chakra-ui/core'
+import React, { useEffect } from 'react'
+import { Box, CSSReset, useToast } from '@chakra-ui/core'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
-import { Player, api } from './modules/deezer'
-import { Album } from './modules/deezer/api/types'
-import { Card } from './components/card'
+import { Recognition } from './modules/recognition'
+import { Player } from './modules/deezer'
+import { Header } from './components/header'
+import { Homepage } from './pages/homepage'
 
 export function App() {
-  const [albums, setAlbums] = useState<Array<Album>>([])
+  const toast = useToast()
 
   useEffect(() => {
-    api.artist.fetchAlbums(8506054).then(r => setAlbums(r.body?.data || []))
-  }, [])
+    const recognition = new Recognition()
+      .addCommand({ trigger: 'play', callback: DZ.player.play })
+      .addCommand({ trigger: 'stop', callback: DZ.player.pause })
+      .addCommand({ trigger: 'next', callback: DZ.player.next })
+      .addCommand({ trigger: 'previous', callback: DZ.player.prev })
+      .addCommand({
+        trigger: 'volume up',
+        callback: () => DZ.player.setVolume(DZ.player.getVolume() + 20),
+      })
+      .addCommand({
+        trigger: 'volume down',
+        callback: () => DZ.player.setVolume(DZ.player.getVolume() - 20),
+      })
+
+    recognition.addEventListener('result', event => {
+      const speechEvent = event as SpeechRecognitionEvent
+
+      const results = Array.from(
+        speechEvent.results[speechEvent.resultIndex]
+      ).map(r => r.transcript)
+
+      toast({
+        position: 'top-right',
+        title: 'Recognized:',
+        description: results.join(' | '),
+      })
+    })
+
+    recognition.start()
+  }, [toast])
 
   return (
-    <ThemeProvider>
+    <BrowserRouter basename="/voice-driven-music-app">
       <CSSReset />
-      <Box mb="20" d="flex" flexWrap="wrap">
-        {albums.map(({ id, cover_medium, title }) => (
-          <Card
-            key={id}
-            title={title}
-            src={cover_medium}
-            onPlay={() => DZ.player.playAlbum(id)}
-            m="3"
-          />
-        ))}
+      <Box>
+        <Header />
+        <Box as="main">
+          <Switch>
+            <Route exact path="/">
+              <Homepage />
+            </Route>
+          </Switch>
+        </Box>
+
+        <Player
+          p="2"
+          bg="white"
+          position="fixed"
+          left="0"
+          right="0"
+          bottom="0"
+        />
       </Box>
-      <Player position="fixed" bottom="0" left="0" right="0" p="2" bg="white" />
-    </ThemeProvider>
+    </BrowserRouter>
   )
 }
