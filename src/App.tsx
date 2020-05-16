@@ -3,7 +3,9 @@ import { Box, CSSReset, useToast } from '@chakra-ui/core'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 import { Recognition } from './modules/recognition'
-import { Player } from './modules/deezer'
+import { pageUrls } from './modules/navigation'
+import { Player } from './modules/deezer/components/player'
+import { Auth } from './modules/deezer/components/auth'
 import { Header } from './components/header'
 import { Homepage } from './pages/homepage'
 
@@ -46,10 +48,12 @@ export function App() {
     <BrowserRouter basename="/voice-driven-music-app">
       <CSSReset />
       <Box>
-        <Header />
+        <Header>
+          <Auth />
+        </Header>
         <Box as="main">
           <Switch>
-            <Route exact path="/">
+            <Route exact path={pageUrls.home}>
               <Homepage />
             </Route>
           </Switch>

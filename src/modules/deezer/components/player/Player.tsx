@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Slider,
   SliderFilledTrack,
@@ -86,11 +86,6 @@ export const Player: React.FC<BoxProps> = props => {
     duration,
   } = useDeezerSubscriptions()
 
-  //TODO: remove in future
-  useEffect(() => {
-    DZ.player.playAlbum(7102365, false)
-  }, [])
-
   return (
     <Box {...props}>
       <TrackProgress position={position} duration={duration} />
@@ -113,7 +108,7 @@ const useDeezerSubscriptions = () => {
     DZ.player.getCurrentTrack()
   )
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     DZ.Event.subscribe('volume_changed', setVolume)
     DZ.Event.subscribe('current_track', ({ track }) => setTrack(track))
     DZ.Event.subscribe('player_play', () => setIsPlaying(true))

@@ -1,0 +1,1 @@
+export { pageUrls } from './navigation'

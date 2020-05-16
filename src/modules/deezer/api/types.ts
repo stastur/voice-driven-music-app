@@ -287,3 +287,47 @@ export type DataArray<T> = {
   data: Array<T & { type: string }>
   total: number
 }
+
+export type User = {
+  /**
+   * The user's Deezer ID
+   */
+
+  id: number
+  /**
+   *     The user's Deezer nickname
+   */
+  name: string
+  /**
+   * 	The user's last name
+   */
+  lastname: string
+  /**
+   * 	The user's first name
+   */
+  firstname: string
+  /**
+   * 	The url of the user's profil picture. Add 'size' parameter to the url to change size. Can be 'small', 'medium', 'big', 'xl'
+   */
+  picture: string
+  /**
+   * 	The url of the user's profil picture in size small.
+   */
+  picture_small: string
+  /**
+   * 	The url of the user's profil picture in size medium.
+   */
+  picture_medium: string
+  /**
+   * 	The url of the user's profil picture in size big.
+   */
+  picture_big: string
+  /**
+   * 	The url of the user's profil picture in size xl.
+   */
+  picture_xl: string
+  // /**
+  //  * 	The user's country
+  //  */
+  // lang: string
+}

@@ -9,6 +9,8 @@ import {
   Artist,
   ApiResponse,
   Chart,
+  User,
+  Playlist,
 } from './types'
 
 abstract class ApiEntity {
@@ -126,6 +128,18 @@ class ChartEntity extends ApiEntity {
   }
 }
 
+class UserEntity extends ApiEntity {
+  protected _apiPath = 'user/me'
+
+  fetchMe = () => {
+    return this._request<User>(this._buildUrl())
+  }
+
+  fetchTracks = () => {
+    return this._request<Pick<Playlist, 'tracks'>>(this._buildUrl())
+  }
+}
+
 export const api = {
   track: new TrackEntity(),
   album: new AlbumEntity(),
@@ -134,4 +148,5 @@ export const api = {
   search: new SearchEntity(),
   artist: new ArtistEntity(),
   chart: new ChartEntity(),
+  user: new UserEntity(),
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box } from '@chakra-ui/core'
 
 import { Album } from '../../modules/deezer/api/types'
-import { api } from '../../modules/deezer'
+import { api } from '../../modules/deezer/api'
 import { Card } from '../../components/card'
 import { SlidingBox } from '../../components/slidingBox'
 

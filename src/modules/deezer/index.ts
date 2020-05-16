@@ -29,7 +29,4 @@ const initDeezer = ({ appId, channelUrl, onload }: InitOptions) => {
   }
 }
 
-export { Player } from './Player'
-export { api } from './api'
-
 export { initDeezer }
