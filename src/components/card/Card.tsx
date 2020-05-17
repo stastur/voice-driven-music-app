@@ -1,17 +1,15 @@
 import React from 'react'
 import { Box, Image, BoxProps, IconButton } from '@chakra-ui/core'
 import { FaPlay } from 'react-icons/fa'
-import { noop } from 'lodash-es'
 
 type CardProps = BoxProps & {
-  onPlay: () => void
+  onPlay?: () => void
   title: string
   description?: string
   src?: string
 }
 
 export const Card: React.FC<CardProps> = ({
-  id,
   title,
   onPlay,
   description,
@@ -27,16 +25,18 @@ export const Card: React.FC<CardProps> = ({
     boxShadow="sm"
   >
     <Box position="relative">
-      <IconButton
-        onClick={onPlay}
-        aria-label={`play ${title}`}
-        icon={FaPlay}
-        isRound={true}
-        m="2"
-        size="sm"
-        bottom="0"
-        position="absolute"
-      />
+      {onPlay && (
+        <IconButton
+          onClick={onPlay}
+          aria-label={`play ${title}`}
+          icon={FaPlay}
+          isRound={true}
+          m="2"
+          size="sm"
+          bottom="0"
+          position="absolute"
+        />
+      )}
       <Image src={src} alt={title} />
     </Box>
     <Box d="flex" flexDirection="column" p="1">
@@ -45,7 +45,3 @@ export const Card: React.FC<CardProps> = ({
     </Box>
   </Box>
 )
-
-Card.defaultProps = {
-  onPlay: noop,
-}

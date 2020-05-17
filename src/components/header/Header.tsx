@@ -6,7 +6,7 @@ import { ReactComponent as LogoBlack } from './black-logo.svg'
 export const Header: React.FC<{}> = ({ children }) => {
   return (
     <Flex as="header" justify="space-between" p="2">
-      <Box>{children}</Box>
+      <Flex align="center">{children}</Flex>
       <Flex align="baseline">
         <Text as="span" fontWeight="bold" pr="2">
           Powered by

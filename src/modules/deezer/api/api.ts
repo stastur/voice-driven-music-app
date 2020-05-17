@@ -69,6 +69,10 @@ class RadioEntity extends ApiEntity {
     return this._request<Radio>(this._buildUrl(id))
   }
 
+  fetchTopStations = () => {
+    return this._request<DataArray<Radio>>(this._buildUrl('top'))
+  }
+
   fetchStations = () => {
     return this._request<DataArray<Radio>>(this._buildUrl())
   }
@@ -123,8 +127,12 @@ class ArtistEntity extends ApiEntity {
 class ChartEntity extends ApiEntity {
   protected _apiPath = 'chart'
 
-  fetchById = (id: number) => {
-    return this._request<Chart>(this._buildUrl(id))
+  fetchById = (genreId: number) => {
+    return this._request<Chart>(this._buildUrl(genreId))
+  }
+
+  fetchCharts = () => {
+    return this._request<Chart>(this._buildUrl())
   }
 }
 
@@ -136,7 +144,43 @@ class UserEntity extends ApiEntity {
   }
 
   fetchTracks = () => {
-    return this._request<Pick<Playlist, 'tracks'>>(this._buildUrl())
+    return this._request<Pick<Playlist, 'tracks'>>(this._buildUrl('tracks'))
+  }
+
+  addToFavorites = (trackId: number) => {
+    return this._request<unknown>(this._buildUrl('tracks'), 'POST', {
+      track_id: trackId,
+    })
+  }
+
+  removeFromFavorites = (trackId: number) => {
+    return this._request<unknown>(this._buildUrl('tracks'), 'DELETE', {
+      track_id: trackId,
+    })
+  }
+
+  isFavoriteTrack = async (trackId: number) => {
+    const { body } = await this.fetchTracks()
+
+    if (!body) {
+      return false
+    }
+
+    return !!body.tracks.data.find(({ id }) => id === trackId)
+  }
+}
+
+class EditorialEntity extends ApiEntity {
+  protected _apiPath = 'editorial'
+
+  fetchEditorials = () => {
+    return this._request<DataArray<Genre>>(this._buildUrl())
+  }
+
+  fetchReleases = (editorialId?: number) => {
+    return this._request<DataArray<Album>>(
+      this._buildUrl(`${editorialId || 0}/releases`)
+    )
   }
 }
 
@@ -149,4 +193,5 @@ export const api = {
   artist: new ArtistEntity(),
   chart: new ChartEntity(),
   user: new UserEntity(),
+  editorial: new EditorialEntity(),
 }

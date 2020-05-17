@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { Box, CSSReset, useToast } from '@chakra-ui/core'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { Box, CSSReset, useToast, PseudoBox } from '@chakra-ui/core'
+import { Switch, Route, BrowserRouter, Link } from 'react-router-dom'
 
 import { Recognition } from './modules/recognition'
 import { pageUrls } from './modules/navigation'
@@ -8,6 +8,7 @@ import { Player } from './modules/deezer/components/player'
 import { Auth } from './modules/deezer/components/auth'
 import { Header } from './components/header'
 import { Homepage } from './pages/homepage'
+import { Genre } from './pages/genre'
 
 export function App() {
   const toast = useToast()
@@ -50,11 +51,17 @@ export function App() {
       <Box>
         <Header>
           <Auth />
+          <PseudoBox pl={3} _hover={{ textDecoration: 'underline' }}>
+            <Link to={pageUrls.home}>Home</Link>
+          </PseudoBox>
         </Header>
-        <Box as="main">
+        <Box mb="20" as="main">
           <Switch>
             <Route exact path={pageUrls.home}>
               <Homepage />
+            </Route>
+            <Route exact path={pageUrls.genre}>
+              <Genre />
             </Route>
           </Switch>
         </Box>
@@ -66,6 +73,7 @@ export function App() {
           left="0"
           right="0"
           bottom="0"
+          zIndex={10}
         />
       </Box>
     </BrowserRouter>

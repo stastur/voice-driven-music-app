@@ -59,7 +59,7 @@ export const SlidingBox: React.FC<SlidingBoxProps> = ({
 
   return (
     <Box {...boxProps} width="100%" position="relative">
-      <Heading pl="3">{label}</Heading>
+      <Heading pl={3}>{label}</Heading>
       <IconButton
         size="lg"
         isRound

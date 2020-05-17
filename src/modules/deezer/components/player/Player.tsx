@@ -7,6 +7,11 @@ import {
   Box,
   IconButton,
   BoxProps,
+  Collapse,
+  ListItem,
+  List,
+  Button,
+  ListIcon,
 } from '@chakra-ui/core'
 import {
   FaBackward,
@@ -14,10 +19,11 @@ import {
   FaPlay,
   FaPause,
   FaVolumeUp,
+  FaMusic,
 } from 'react-icons/fa'
 
 const Volume: React.FC<{ value: number }> = ({ value }) => (
-  <Box d="flex" alignItems="center">
+  <Box px={2} d="flex" alignItems="center">
     <Box as={FaVolumeUp} paddingRight="1" />
 
     <Box d="flex" alignItems="center">
@@ -77,6 +83,52 @@ const TrackProgress: React.FC<{ position: number; duration: number }> = ({
   )
 }
 
+const TracksQueue: React.FC<{
+  tracks: Array<DeezerSdk.Track>
+  active: string
+}> = ({ tracks, active }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleIsOpen = () => setIsOpen(isOpen => !isOpen)
+
+  return (
+    <Box>
+      <Box position="relative">
+        <Collapse
+          backgroundColor="white"
+          position="absolute"
+          bottom={0}
+          right={0}
+          isOpen={isOpen}
+          width="3xs"
+          maxHeight="lg"
+          overflowY="auto"
+          borderWidth="1px"
+          shadow="sm"
+          rounded="lg"
+          p={3}
+          mb={2}
+        >
+          {!!tracks.length ? (
+            <List height="100%" width="100%">
+              {tracks.map(track => (
+                <ListItem key={track.id} d="flex" alignItems="center">
+                  {active === track.id && <ListIcon icon={FaMusic} />}
+                  <Song key={track.id} details={track} />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            'Queue is empty'
+          )}
+        </Collapse>
+      </Box>
+      <Button onClick={toggleIsOpen} size="sm">
+        Queue
+      </Button>
+    </Box>
+  )
+}
+
 export const Player: React.FC<BoxProps> = props => {
   const {
     track,
@@ -84,6 +136,7 @@ export const Player: React.FC<BoxProps> = props => {
     isPlaying,
     position,
     duration,
+    queue,
   } = useDeezerSubscriptions()
 
   return (
@@ -94,12 +147,16 @@ export const Player: React.FC<BoxProps> = props => {
         <Controls isPlaying={isPlaying} />
         <Song details={track} />
         <Volume value={volume} />
+        <TracksQueue tracks={queue} active={track?.id} />
       </Box>
     </Box>
   )
 }
 
 const useDeezerSubscriptions = () => {
+  const [queue, setQueue] = useState<Array<DeezerSdk.Track>>(
+    DZ.player.getTrackList()
+  )
   const [volume, setVolume] = useState<number>(DZ.player.getVolume())
   const [isPlaying, setIsPlaying] = useState<boolean>(DZ.player.isPlaying())
   const [position, setPosition] = useState<number>(0)
@@ -117,7 +174,10 @@ const useDeezerSubscriptions = () => {
       setPosition(position)
       setDuration(duration)
     })
+    DZ.Event.subscribe('tracklist_changed', () =>
+      setQueue(DZ.player.getTrackList())
+    )
   }, [])
 
-  return { track, volume, isPlaying, position, duration }
+  return { track, volume, isPlaying, position, duration, queue }
 }
