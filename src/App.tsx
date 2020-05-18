@@ -9,6 +9,7 @@ import { Auth } from './modules/deezer/components/auth'
 import { Header } from './components/header'
 import { Homepage } from './pages/homepage'
 import { Genre } from './pages/genre'
+import { Artist } from './pages/artist'
 
 export function App() {
   const toast = useToast()
@@ -62,6 +63,9 @@ export function App() {
             </Route>
             <Route exact path={pageUrls.genre}>
               <Genre />
+            </Route>
+            <Route exact path={pageUrls.artist}>
+              <Artist />
             </Route>
           </Switch>
         </Box>

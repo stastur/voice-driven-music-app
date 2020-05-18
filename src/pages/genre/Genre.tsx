@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Box, Heading, SimpleGrid, Flex } from '@chakra-ui/core'
+import { useParams, Link } from 'react-router-dom'
+import { Box, Heading, SimpleGrid, Flex, Spinner } from '@chakra-ui/core'
 import { FaMusic } from 'react-icons/fa'
 
 import { api } from '../../modules/deezer/api'
@@ -12,19 +12,32 @@ import { Track } from '../../components/track'
 export const Genre: React.FC<{}> = () => {
   const [chart, setChart] = useState<Chart>()
   const [genre, setGenre] = useState<GenreType>()
+  const [isLoading, setIsLoading] = useState(true)
   const { id } = useParams()
 
   useEffect(() => {
     const asyncEffect = async () => {
+      setIsLoading(true)
+
       const chart = (await api.chart.fetchById(id)).body
       const genre = (await api.genre.fetchById(id)).body
 
       genre && setGenre(genre)
       chart && setChart(chart)
+
+      setIsLoading(false)
     }
 
     asyncEffect()
   }, [id])
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" w="100%">
+        <Spinner size="xl" />
+      </Flex>
+    )
+  }
 
   return (
     <Box>
@@ -37,7 +50,9 @@ export const Genre: React.FC<{}> = () => {
 
       <SlidingBox label="Artists">
         {chart?.artists.data.map(({ id, name, picture_medium }) => (
-          <Card m={3} key={id} src={picture_medium} title={name} />
+          <Link key={id} to={`/artist/${id}`}>
+            <Card m={3} src={picture_medium} title={name} />
+          </Link>
         ))}
       </SlidingBox>
 

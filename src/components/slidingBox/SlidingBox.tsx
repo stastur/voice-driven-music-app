@@ -40,11 +40,11 @@ export const SlidingBox: React.FC<SlidingBoxProps> = ({
     const totalWidth = itemsRef.current?.clientWidth ?? 0
 
     const offset = childrenCount && totalWidth / childrenCount
-    const transtionsNumber =
+    const transitionsNumber =
       offset && Math.ceil(childrenCount - visibleWidth / offset) + 1
 
     setOffset(offset)
-    setTransitionsNumber(transtionsNumber)
+    setTransitionsNumber(transitionsNumber > 0 ? transitionsNumber : 0)
   }, [childrenCount, windowSize])
 
   const moveBackward = useCallback(
@@ -60,18 +60,20 @@ export const SlidingBox: React.FC<SlidingBoxProps> = ({
   return (
     <Box {...boxProps} width="100%" position="relative">
       <Heading pl={3}>{label}</Heading>
-      <IconButton
-        size="lg"
-        isRound
-        position="absolute"
-        zIndex={1}
-        left="0"
-        top="50%"
-        bottom="50%"
-        aria-label={`${label} section forward`}
-        icon={FaChevronCircleLeft}
-        onClick={moveBackward}
-      />
+      {!!transitionsNumber && (
+        <IconButton
+          size="lg"
+          isRound
+          position="absolute"
+          zIndex={1}
+          left="0"
+          top="50%"
+          bottom="50%"
+          aria-label={`${label} section forward`}
+          icon={FaChevronCircleLeft}
+          onClick={moveBackward}
+        />
+      )}
       <Box ref={containerRef} overflowX="hidden">
         <Flex
           ref={itemsRef}
@@ -82,18 +84,20 @@ export const SlidingBox: React.FC<SlidingBoxProps> = ({
           {children}
         </Flex>
       </Box>
-      <IconButton
-        size="lg"
-        isRound
-        position="absolute"
-        zIndex={1}
-        right="0"
-        top="50%"
-        bottom="50%"
-        aria-label={`${label} section forward`}
-        icon={FaChevronCircleRight}
-        onClick={moveForward}
-      />
+      {!!transitionsNumber && (
+        <IconButton
+          size="lg"
+          isRound
+          position="absolute"
+          zIndex={1}
+          right="0"
+          top="50%"
+          bottom="50%"
+          aria-label={`${label} section forward`}
+          icon={FaChevronCircleRight}
+          onClick={moveForward}
+        />
+      )}
     </Box>
   )
 }

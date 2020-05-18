@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, SimpleGrid, Flex, Heading } from '@chakra-ui/core'
+import { Box, SimpleGrid, Flex, Heading, Spinner } from '@chakra-ui/core'
 
 import { Link } from 'react-router-dom'
 
@@ -14,9 +14,12 @@ export const Homepage: React.FC<{}> = () => {
   const [stations, setStations] = useState<Array<Radio>>([])
   const [tracks, setTracks] = useState<Array<Track>>([])
   const [editorials, setEditorials] = useState<Array<Genre>>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const asyncEffect = async () => {
+      setIsLoading(true)
+
       const chart = (await api.chart.fetchCharts()).body
       const stations = (await api.radio.fetchTopStations()).body
       const releases = (await api.editorial.fetchReleases()).body
@@ -26,10 +29,20 @@ export const Homepage: React.FC<{}> = () => {
       setStations(stations?.data || [])
       setReleases(releases?.data || [])
       setTracks(chart?.tracks.data || [])
+
+      setIsLoading(false)
     }
 
     asyncEffect()
   }, [])
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" w="100%">
+        <Spinner size="xl" />
+      </Flex>
+    )
+  }
 
   return (
     <Box d="flex" flexWrap="wrap">
@@ -81,8 +94,8 @@ export const Homepage: React.FC<{}> = () => {
           {editorials
             .filter(({ id }) => id !== 0)
             .map(({ name, id, picture_medium }) => (
-              <Link to={`/genre/${id}`}>
-                <Card mb={3} key={id} title={name} src={picture_medium} />
+              <Link key={id} to={`/genre/${id}`}>
+                <Card mb={3} title={name} src={picture_medium} />
               </Link>
             ))}
         </Flex>

@@ -122,6 +122,19 @@ class ArtistEntity extends ApiEntity {
   fetchRelatedArtists = (id: number) => {
     return this._request<DataArray<Artist>>(this._buildUrl(`${id}/related`))
   }
+
+  fetchTopTracks = (id: number) => {
+    return this._request<DataArray<Track>>(this._buildUrl(`${id}/top`))
+  }
+
+  fetchAllTracks = async (id: number) => {
+    const data = (await this.fetchTopTracks(id)).body
+    const total = data?.total || 10
+
+    return this._request<DataArray<Track>>(
+      this._buildUrl(`${id}/top?limit=${total}`)
+    )
+  }
 }
 
 class ChartEntity extends ApiEntity {
