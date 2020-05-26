@@ -12,7 +12,7 @@ const DEFAULT_MAX_ALTERNATIVES = 5
 
 export class Recognition implements IRecognition {
   private _recognition: SpeechRecognition
-  private _commandsMap = new Map<string, () => void>() //TODO: commands structure, typing
+  private _commandsMap = new Map<ICommand['trigger'], ICommand['callback']>()
   private _eventListenersMap = new Map<ISpeechEventType, ISpeechEventListener>()
 
   constructor() {
@@ -85,10 +85,15 @@ export class Recognition implements IRecognition {
   }
 
   private _getCommandCallback = (result: string) => {
-    return (
-      this._commandsMap.get(result.toLocaleLowerCase(this._recognition.lang)) ||
-      noop
-    )
+    for (const [key, callback] of this._commandsMap.entries()) {
+      const match = new RegExp(`^${key}`).exec(result)
+
+      if (match) {
+        return () => callback(match.slice(1))
+      }
+    }
+
+    return noop
   }
 
   private _getEventListener = (event: ISpeechEventType) => {
@@ -96,10 +101,7 @@ export class Recognition implements IRecognition {
   }
 
   addCommand = (command: ICommand) => {
-    this._commandsMap.set(
-      command.trigger.toLocaleLowerCase(this._recognition.lang),
-      command.callback
-    )
+    this._commandsMap.set(command.trigger, command.callback)
     return this
   }
 

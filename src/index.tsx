@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from '@chakra-ui/core'
+import { BrowserRouter } from 'react-router-dom'
 
 import { initDeezer } from './modules/deezer'
 
@@ -14,9 +15,11 @@ initDeezer({
   channelUrl,
   onload: () => {
     ReactDOM.render(
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>,
+      <BrowserRouter basename="/voice-driven-music-app">
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>,
       document.getElementById('root')
     )
   },

@@ -1,7 +1,6 @@
-//TODO: params processing
 export type ICommand = {
   trigger: string
-  callback: () => void
+  callback: (args: Array<string>) => void
 }
 
 export type ISpeechEventType = keyof SpeechRecognitionEventMap

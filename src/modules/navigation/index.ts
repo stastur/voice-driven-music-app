@@ -1,1 +1,1 @@
-export { pageUrls } from './navigation'
+export { pageUrls, Navigation } from './navigation'

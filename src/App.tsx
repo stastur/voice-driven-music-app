@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { Box, CSSReset, useToast, PseudoBox } from '@chakra-ui/core'
-import { Switch, Route, BrowserRouter, Link } from 'react-router-dom'
+import { Switch, Route, Link, useHistory } from 'react-router-dom'
 
 import { Recognition } from './modules/recognition'
-import { pageUrls } from './modules/navigation'
+import { pageUrls, Navigation } from './modules/navigation'
 import { Player } from './modules/deezer/components/player'
 import { Auth } from './modules/deezer/components/auth'
 import { Header } from './components/header'
@@ -13,8 +13,10 @@ import { Artist } from './pages/artist'
 
 export function App() {
   const toast = useToast()
+  const history = useHistory()
 
   useEffect(() => {
+    const navigation = new Navigation(history)
     const recognition = new Recognition()
       .addCommand({ trigger: 'play', callback: DZ.player.play })
       .addCommand({ trigger: 'stop', callback: DZ.player.pause })
@@ -27,6 +29,12 @@ export function App() {
       .addCommand({
         trigger: 'volume down',
         callback: () => DZ.player.setVolume(DZ.player.getVolume() - 20),
+      })
+      .addCommand({
+        trigger: 'go to (.+)',
+        callback: args => {
+          navigation.scrollTo(args[0])
+        },
       })
 
     recognition.addEventListener('result', event => {
@@ -44,10 +52,10 @@ export function App() {
     })
 
     recognition.start()
-  }, [toast])
+  }, [toast, history])
 
   return (
-    <BrowserRouter basename="/voice-driven-music-app">
+    <Fragment>
       <CSSReset />
       <Box>
         <Header>
@@ -80,6 +88,6 @@ export function App() {
           zIndex={10}
         />
       </Box>
-    </BrowserRouter>
+    </Fragment>
   )
 }
