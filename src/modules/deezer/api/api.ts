@@ -1,4 +1,4 @@
-import { curry, isNil, negate } from 'lodash'
+import { curry, isNil, negate } from 'lodash-es'
 
 import {
   Track,
@@ -157,7 +157,7 @@ class UserEntity extends ApiEntity {
   }
 
   fetchTracks = () => {
-    return this._request<Pick<Playlist, 'tracks'>>(this._buildUrl('tracks'))
+    return this._request<Playlist['tracks']>(this._buildUrl('tracks'))
   }
 
   addToFavorites = (trackId: number) => {
@@ -179,7 +179,7 @@ class UserEntity extends ApiEntity {
       return false
     }
 
-    return !!body.tracks.data.find(({ id }) => id === trackId)
+    return !!body.data.find(({ id }) => id === trackId)
   }
 }
 

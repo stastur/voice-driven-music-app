@@ -8,6 +8,7 @@ import { Chart, Genre as GenreType } from '../../modules/deezer/api/types'
 import { SlidingBox } from '../../components/slidingBox'
 import { Card } from '../../components/card'
 import { Track } from '../../components/track'
+import { startWith } from '../../utils/helpers'
 
 export const Genre: React.FC<{}> = () => {
   const [chart, setChart] = useState<Chart>()
@@ -83,15 +84,24 @@ export const Genre: React.FC<{}> = () => {
 
       <Heading pl={3}>Popular tracks</Heading>
       <SimpleGrid columns={{ xs: 1, sm: 2 }} spacing={3} px={3}>
-        {chart?.tracks.data.map(({ id, title, duration, artist }) => (
-          <Track
-            key={id}
-            title={title}
-            duration={duration}
-            artist={artist.name}
-            onPlay={() => DZ.player.playTracks([`${id}`])}
-          />
-        ))}
+        {chart?.tracks.data.map(
+          ({ id, title, duration, artist }, _, tracks) => (
+            <Track
+              key={id}
+              title={title}
+              duration={duration}
+              artist={artist.name}
+              onPlay={() =>
+                DZ.player.playTracks(
+                  startWith(
+                    tracks.map(({ id }) => id),
+                    id
+                  ).map(String)
+                )
+              }
+            />
+          )
+        )}
       </SimpleGrid>
     </Box>
   )

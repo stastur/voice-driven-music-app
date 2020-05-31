@@ -21,6 +21,7 @@ import {
 import { SlidingBox } from '../../components/slidingBox'
 import { Card } from '../../components/card'
 import { Track } from '../../components/track'
+import { startWith } from '../../utils/helpers'
 
 export const Artist: React.FC<{}> = () => {
   const [artist, setArtist] = useState<ArtistType>()
@@ -89,7 +90,14 @@ export const Artist: React.FC<{}> = () => {
             title={title}
             artist={artist.name}
             duration={duration}
-            onPlay={() => DZ.player.playTracks([`${id}`])}
+            onPlay={() =>
+              DZ.player.playTracks(
+                startWith(
+                  topTracks.map(({ id }) => id),
+                  id
+                ).map(String)
+              )
+            }
           />
         ))}
       </Box>

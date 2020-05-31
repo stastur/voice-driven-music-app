@@ -8,6 +8,7 @@ import { api } from '../../modules/deezer/api'
 import { Card } from '../../components/card'
 import { SlidingBox } from '../../components/slidingBox'
 import { Track as TrackComponent } from '../../components/track'
+import { startWith } from '../../utils/helpers'
 
 export const Homepage: React.FC<{}> = () => {
   const [releases, setReleases] = useState<Array<Album>>([])
@@ -75,7 +76,14 @@ export const Homepage: React.FC<{}> = () => {
         {tracks.map(({ title, artist, duration, id }) => (
           <TrackComponent
             key={id}
-            onPlay={() => DZ.player.playTracks([`${id}`])}
+            onPlay={() =>
+              DZ.player.playTracks(
+                startWith(
+                  tracks.map(({ id }) => id),
+                  id
+                ).map(String)
+              )
+            }
             title={title}
             duration={duration}
             artist={artist.name}

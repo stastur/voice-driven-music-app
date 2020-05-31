@@ -70,14 +70,19 @@ export const Auth: React.FC<{}> = () => {
     <Box>
       <Button
         onClick={() =>
-          DZ.login(async loginResponse => {
-            if (!loginResponse.authResponse) {
-              return
-            }
+          DZ.login(
+            //@ts-ignore typings
+            async loginResponse => {
+              if (!loginResponse.authResponse) {
+                return
+              }
 
-            const { body } = await api.user.fetchMe()
-            return body && setUser(body)
-          })
+              const { body } = await api.user.fetchMe()
+              return body && setUser(body)
+            },
+            //@ts-ignore  are missing permissions
+            { perms: 'basic_access,manage_library,delete_library' }
+          )
         }
       >
         Log in

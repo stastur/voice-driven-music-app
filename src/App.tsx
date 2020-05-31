@@ -10,6 +10,8 @@ import { Header } from './components/header'
 import { Homepage } from './pages/homepage'
 import { Genre } from './pages/genre'
 import { Artist } from './pages/artist'
+import { MyTracks } from './pages/myTracks'
+import { api } from './modules/deezer/api'
 
 export function App() {
   const toast = useToast()
@@ -34,6 +36,18 @@ export function App() {
         trigger: 'go to (.+)',
         callback: args => {
           navigation.scrollTo(args[0])
+        },
+      })
+      .addCommand({
+        trigger: 'like',
+        callback: () => {
+          api.user.addToFavorites(Number(DZ.player.getCurrentTrack().id))
+        },
+      })
+      .addCommand({
+        trigger: 'dislike',
+        callback: () => {
+          api.user.removeFromFavorites(Number(DZ.player.getCurrentTrack().id))
         },
       })
 
@@ -74,6 +88,9 @@ export function App() {
             </Route>
             <Route exact path={pageUrls.artist}>
               <Artist />
+            </Route>
+            <Route exact path={pageUrls.myTracks}>
+              <MyTracks />
             </Route>
           </Switch>
         </Box>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { throttle } from 'lodash-es'
 import {
   Slider,
   SliderFilledTrack,
@@ -12,6 +13,7 @@ import {
   List,
   Button,
   ListIcon,
+  PseudoBox,
 } from '@chakra-ui/core'
 import {
   FaBackward,
@@ -20,7 +22,52 @@ import {
   FaPause,
   FaVolumeUp,
   FaMusic,
+  FaHeart,
 } from 'react-icons/fa'
+
+import { api } from '../../api'
+
+const ManageFavoriteButton: React.FC<{ trackId: number }> = ({ trackId }) => {
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const throttledUpdate = useCallback(
+    throttle(async (trackId: number) => {
+      const isFavorite = await api.user.isFavoriteTrack(trackId)
+
+      setIsFavorite(isFavorite)
+    }, 5000),
+    []
+  )
+
+  useEffect(() => {
+    throttledUpdate(trackId)
+  })
+
+  const boxProps = isFavorite
+    ? {
+        onClick: () => {
+          api.user.removeFromFavorites(trackId)
+          setIsFavorite(false)
+        },
+        title: 'Remove from favorites',
+        color: 'red.500',
+      }
+    : {
+        onClick: () => {
+          api.user.addToFavorites(trackId)
+          setIsFavorite(true)
+        },
+        title: 'Add to favorites',
+        color: 'gray.500',
+        _hover: { color: 'red.300' },
+      }
+
+  return (
+    <Box px="2">
+      <PseudoBox as={FaHeart} cursor="pointer" {...boxProps} />
+    </Box>
+  )
+}
 
 const Volume: React.FC<{ value: number }> = ({ value }) => (
   <Box px={2} d="flex" alignItems="center">
@@ -138,6 +185,11 @@ export const Player: React.FC<BoxProps> = props => {
     duration,
     queue,
   } = useDeezerSubscriptions()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+
+  DZ.getLoginStatus(({ status }) => {
+    setIsAuthorized(status === 'connected')
+  })
 
   return (
     <Box {...props}>
@@ -146,6 +198,9 @@ export const Player: React.FC<BoxProps> = props => {
       <Box d="flex" alignItems="center">
         <Controls isPlaying={isPlaying} />
         <Song details={track} />
+        {track && isAuthorized && (
+          <ManageFavoriteButton trackId={Number(track.id)} />
+        )}
         <Volume value={volume} />
         <TracksQueue tracks={queue} active={track?.id} />
       </Box>
