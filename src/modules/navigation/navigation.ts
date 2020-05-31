@@ -2,6 +2,7 @@ import { History } from 'history'
 
 export const pageUrls = {
   myTracks: '/my-tracks',
+  search: '/search',
   genre: '/genre/:id',
   home: '/',
   artist: '/artist/:id',

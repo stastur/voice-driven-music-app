@@ -11,6 +11,7 @@ import {
   Chart,
   User,
   Playlist,
+  SearchResults,
 } from './types'
 
 abstract class ApiEntity {
@@ -98,13 +99,19 @@ class SearchEntity extends ApiEntity {
   protected _apiPath = 'search'
 
   searchEverything = (query: string) => {
-    return this._request<DataArray<Track | Artist | Album>>(
-      this._buildUrl(`track?q=${query}`)
-    )
+    return this._request<SearchResults>(this._buildUrl(`?q=${query}`))
   }
 
   searchTracks = (query: string) => {
     return this._request<DataArray<Track>>(this._buildUrl(`track?q=${query}`))
+  }
+
+  searchAlbums = (query: string) => {
+    return this._request<DataArray<Album>>(this._buildUrl(`album?q=${query}`))
+  }
+
+  searchArtists = (query: string) => {
+    return this._request<DataArray<Artist>>(this._buildUrl(`artist?q=${query}`))
   }
 }
 

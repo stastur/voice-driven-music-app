@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { useEffect, Fragment, useCallback } from 'react'
 import { Box, CSSReset, useToast, PseudoBox } from '@chakra-ui/core'
 import { Switch, Route, Link, useHistory } from 'react-router-dom'
 
@@ -12,14 +12,22 @@ import { Genre } from './pages/genre'
 import { Artist } from './pages/artist'
 import { MyTracks } from './pages/myTracks'
 import { api } from './modules/deezer/api'
+import { SearchResults } from './pages/searchResults'
+import { SearchInput } from './components/searchInput'
 
 export function App() {
   const toast = useToast()
   const history = useHistory()
 
+  const handleSearch = useCallback(
+    (query: string) => history.push(`${pageUrls.search}?q=${query}`),
+    [history]
+  )
+
   useEffect(() => {
     const navigation = new Navigation(history)
     const recognition = new Recognition()
+      .setAlternatives(1)
       .addCommand({ trigger: 'play', callback: DZ.player.play })
       .addCommand({ trigger: 'stop', callback: DZ.player.pause })
       .addCommand({ trigger: 'next', callback: DZ.player.next })
@@ -50,6 +58,12 @@ export function App() {
           api.user.removeFromFavorites(Number(DZ.player.getCurrentTrack().id))
         },
       })
+      .addCommand({
+        trigger: 'search for (.+)',
+        callback: args => {
+          handleSearch(args[0])
+        },
+      })
 
     recognition.addEventListener('result', event => {
       const speechEvent = event as SpeechRecognitionEvent
@@ -66,7 +80,7 @@ export function App() {
     })
 
     recognition.start()
-  }, [toast, history])
+  }, [toast, history, handleSearch])
 
   return (
     <Fragment>
@@ -74,10 +88,17 @@ export function App() {
       <Box>
         <Header>
           <Auth />
+          <SearchInput
+            display="flex"
+            justifyContent="center"
+            paddingLeft={2}
+            onSearchClick={handleSearch}
+          />
           <PseudoBox pl={3} _hover={{ textDecoration: 'underline' }}>
             <Link to={pageUrls.home}>Home</Link>
           </PseudoBox>
         </Header>
+
         <Box mb="20" as="main">
           <Switch>
             <Route exact path={pageUrls.home}>
@@ -91,6 +112,9 @@ export function App() {
             </Route>
             <Route exact path={pageUrls.myTracks}>
               <MyTracks />
+            </Route>
+            <Route exact path={pageUrls.search}>
+              <SearchResults />
             </Route>
           </Switch>
         </Box>

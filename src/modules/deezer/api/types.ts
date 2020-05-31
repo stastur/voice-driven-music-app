@@ -331,3 +331,7 @@ export type User = {
   //  */
   // lang: string
 }
+
+export type SearchResults = DataArray<
+  (Track | Artist | Album) & { type: 'artist' | 'track' | 'album' }
+>
