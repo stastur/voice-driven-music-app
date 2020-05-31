@@ -1,4 +1,4 @@
-import { noop } from 'lodash-es'
+import { noop, has } from 'lodash-es'
 
 import {
   ICommand,
@@ -15,8 +15,13 @@ export class Recognition implements IRecognition {
   private _commandsMap = new Map<ICommand['trigger'], ICommand['callback']>()
   private _eventListenersMap = new Map<ISpeechEventType, ISpeechEventListener>()
 
+  static isSupported = () =>
+    has(window, 'webkitSpeechRecognition') || has(window, 'SpeechRecognition')
+
   constructor() {
-    const SpeechRecognition = (window as any).webkitSpeechRecognition
+    const SpeechRecognition =
+      (window as any).webkitSpeechRecognition ||
+      (window as any).SpeechRecognition
 
     if (!SpeechRecognition) {
       throw new Error('Speech recognition is not supported by your browser')

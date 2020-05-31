@@ -26,6 +26,12 @@ export function App() {
 
   useEffect(() => {
     const navigation = new Navigation(history)
+
+    console.log(Recognition.isSupported())
+    if (!Recognition.isSupported()) {
+      return
+    }
+
     const recognition = new Recognition()
       .setAlternatives(1)
       .addCommand({ trigger: 'play', callback: DZ.player.play })
