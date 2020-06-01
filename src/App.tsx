@@ -70,6 +70,18 @@ export function App() {
           handleSearch(args[0])
         },
       })
+      .addCommand({
+        trigger: 'go back',
+        callback: () => {
+          navigation.back()
+        },
+      })
+      .addCommand({
+        trigger: 'go forward',
+        callback: () => {
+          navigation.forward()
+        },
+      })
 
     recognition.addEventListener('result', event => {
       const speechEvent = event as SpeechRecognitionEvent
