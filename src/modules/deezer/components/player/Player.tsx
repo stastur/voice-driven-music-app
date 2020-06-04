@@ -14,6 +14,7 @@ import {
   Button,
   ListIcon,
   PseudoBox,
+  Flex,
 } from '@chakra-ui/core'
 import {
   FaBackward,
@@ -84,7 +85,7 @@ const Volume: React.FC<{ value: number }> = ({ value }) => (
 )
 
 const Controls: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
-  <Box>
+  <Flex wrap="nowrap">
     <IconButton
       variant="outline"
       aria-label="previous track"
@@ -103,11 +104,14 @@ const Controls: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
       icon={FaForward}
       onClick={DZ.player.next}
     />
-  </Box>
+  </Flex>
 )
 
-const Song: React.FC<{ details: DeezerSdk.Track }> = ({ details }) => (
-  <Box px="2" flexGrow={1}>
+const Song: React.FC<{ details: DeezerSdk.Track } & BoxProps> = ({
+  details,
+  ...boxProps
+}) => (
+  <Box px="2" flexGrow={1} {...boxProps}>
     <Box fontWeight="bold" fontSize="md">
       {details?.title}
     </Box>

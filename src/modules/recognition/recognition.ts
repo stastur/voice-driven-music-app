@@ -91,7 +91,7 @@ export class Recognition implements IRecognition {
 
   private _getCommandCallback = (result: string) => {
     for (const [key, callback] of this._commandsMap.entries()) {
-      const match = new RegExp(`^${key}`, 'i').exec(result)
+      const match = new RegExp(`^${key}$`, 'i').exec(result)
 
       if (match) {
         return () => callback(match.slice(1))
