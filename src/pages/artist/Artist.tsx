@@ -62,7 +62,7 @@ export const Artist: React.FC<{}> = () => {
   return (
     <Box>
       <Flex mx={3}>
-        <Image size="2xs" alt={artist?.name} src={artist?.picture_big} />
+        <Image size=["8rem", "2xs"] alt={artist?.name} src={artist?.picture_big} />
         <Box ml={3}>
           <Text textTransform="uppercase">Artist</Text>
           <Heading>{artist?.name}</Heading>
