@@ -36,7 +36,7 @@ const ManageFavoriteButton: React.FC<{ trackId: number }> = ({ trackId }) => {
       const isFavorite = await api.user.isFavoriteTrack(trackId)
 
       setIsFavorite(isFavorite)
-    }, 5000),
+    }, 2000),
     []
   )
 
