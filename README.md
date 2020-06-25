@@ -1,3 +1,5 @@
+![Deployment](https://github.com/stastur/voice-driven-music-app/workflows/Deployment/badge.svg)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
