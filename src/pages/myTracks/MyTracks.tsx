@@ -15,7 +15,7 @@ export const MyTracks: React.FC<{}> = () => {
       const tracks = (await api.user.fetchTracks()).body?.data
 
       tracks && setTracks(tracks)
-    }, 5000),
+    }, 2000),
     []
   )
 
